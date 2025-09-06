@@ -5,7 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Download, Palette, Square } from 'lucide-react';
+import { Download, Palette, Square, Copy, Share2 } from 'lucide-react';
 import { toast } from 'sonner';
 
 interface QRGeneratorProps {}
@@ -61,6 +61,70 @@ const QRGenerator: React.FC<QRGeneratorProps> = () => {
     link.click();
     document.body.removeChild(link);
     toast.success('QR Code downloaded!');
+  };
+
+  const copyQRCode = async () => {
+    if (!qrCodeDataUrl) {
+      toast.error('Please generate a QR code first');
+      return;
+    }
+
+    try {
+      // Convert data URL to blob
+      const response = await fetch(qrCodeDataUrl);
+      const blob = await response.blob();
+      
+      // Copy to clipboard using the Clipboard API
+      await navigator.clipboard.write([
+        new ClipboardItem({
+          [blob.type]: blob
+        })
+      ]);
+      
+      toast.success('QR Code copied to clipboard!');
+    } catch (error) {
+      console.error('Failed to copy QR code:', error);
+      // Fallback: copy the data URL as text
+      try {
+        await navigator.clipboard.writeText(qrCodeDataUrl);
+        toast.success('QR Code image data copied as text!');
+      } catch (fallbackError) {
+        toast.error('Failed to copy QR code to clipboard');
+      }
+    }
+  };
+
+  const shareQRCode = async () => {
+    if (!qrCodeDataUrl) {
+      toast.error('Please generate a QR code first');
+      return;
+    }
+
+    try {
+      // Check if Web Share API is supported
+      if (navigator.share) {
+        // Convert data URL to blob for sharing
+        const response = await fetch(qrCodeDataUrl);
+        const blob = await response.blob();
+        const file = new File([blob], `qr-code-${Date.now()}.png`, { type: 'image/png' });
+
+        await navigator.share({
+          title: 'QR Code',
+          text: `QR Code for: ${inputText}`,
+          files: [file]
+        });
+        
+        toast.success('QR Code shared successfully!');
+      } else {
+        // Fallback: copy share text to clipboard
+        const shareText = `Check out this QR code for: ${inputText}\n\nGenerated with QR Code Generator`;
+        await navigator.clipboard.writeText(shareText);
+        toast.success('Share text copied to clipboard!');
+      }
+    } catch (error) {
+      console.error('Failed to share QR code:', error);
+      toast.error('Failed to share QR code');
+    }
   };
 
   // Auto-generate QR code when inputs change
@@ -212,16 +276,39 @@ const QRGenerator: React.FC<QRGeneratorProps> = () => {
                 )}
               </div>
 
-              {/* Download Button */}
-              <Button
-                onClick={downloadQRCode}
-                disabled={!qrCodeDataUrl}
-                variant="outline"
-                className="w-full h-12 border-qr-primary text-qr-primary hover:bg-qr-primary hover:text-white transition-all duration-300"
-              >
-                <Download className="h-4 w-4 mr-2" />
-                Download PNG
-              </Button>
+              {/* Action Buttons */}
+              <div className="w-full space-y-3">
+                <Button
+                  onClick={downloadQRCode}
+                  disabled={!qrCodeDataUrl}
+                  className="w-full h-12 bg-gradient-primary hover:shadow-glow transition-all duration-300"
+                >
+                  <Download className="h-4 w-4 mr-2" />
+                  Download PNG
+                </Button>
+                
+                <div className="grid grid-cols-2 gap-3">
+                  <Button
+                    onClick={copyQRCode}
+                    disabled={!qrCodeDataUrl}
+                    variant="outline"
+                    className="h-12 border-qr-primary text-qr-primary hover:bg-qr-primary hover:text-white transition-all duration-300"
+                  >
+                    <Copy className="h-4 w-4 mr-2" />
+                    Copy
+                  </Button>
+                  
+                  <Button
+                    onClick={shareQRCode}
+                    disabled={!qrCodeDataUrl}
+                    variant="outline"
+                    className="h-12 border-qr-secondary text-qr-secondary hover:bg-qr-secondary hover:text-white transition-all duration-300"
+                  >
+                    <Share2 className="h-4 w-4 mr-2" />
+                    Share
+                  </Button>
+                </div>
+              </div>
 
               {/* Info */}
               {qrCodeDataUrl && (
