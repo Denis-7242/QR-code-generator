@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>QR Code Generator</title>
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="style.css" />
+
+  <!-- Font Awesome (icons) -->
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+  />
+
+  <!-- QRCode library – FIXED -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+  <!-- App logic -->
+  <script defer src="script.js"></script>
+</head>
+<body>
+  <div class="wrapper">
+    <div class="container">
+      <h1>🚀 QR Code Generator</h1>
+      <p class="subtitle">Generate, copy, and share QR codes instantly</p>
+
+      <input type="text" id="text" placeholder="Enter text or URL" />
+
+      <div class="options">
+        <label for="size">Size:</label>
+        <select id="size">
+          <option value="150">150x150</option>
+          <option value="200" selected>200x200</option>
+          <option value="250">250x250</option>
+          <option value="300">300x300</option>
+        </select>
+      </div>
+
+      <button class="generate-btn" id="generateBtn">
+        <i class="fas fa-qrcode"></i> Generate QR Code
+      </button>
+
+      <div id="qrcode" class="qr-box" aria-live="polite"></div>
+
+      <div class="actions">
+        <a id="downloadLink" style="display:none;" download="qrcode.png">
+          <i class="fas fa-download"></i> Download
+        </a>
+        <button id="copyBtn" style="display:none;">
+          <i class="fas fa-copy"></i> Copy
+        </button>
+        <button id="shareBtn" style="display:none;">
+          <i class="fas fa-share-alt"></i> Share
+        </button>
+      </div>
+
+      <p class="footnote">
+        💡 Copy/Share works best over HTTPS or a local server.
+      </p>
+    </div>
+  </div>
+</body>
+</html>
