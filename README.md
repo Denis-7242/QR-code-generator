@@ -46,11 +46,6 @@ QR code generator/
 ## Browser Support
 Works on modern browsers (Chromium, Firefox, Safari, Edge). If something doesn’t work, try serving via a local server as described above.
 
-## Screenshots (optional)
-Add screenshots or a GIF of the app in action here.
 
 ## License
 MIT License. You’re free to use, modify, and distribute with attribution.
-
-## Credits
-If this project uses a QR library (e.g., `qrcodejs` or similar), credit the library and its license here.
