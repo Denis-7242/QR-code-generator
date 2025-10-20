@@ -46,5 +46,9 @@ QR code generator/
 ## Browser Support
 Works on modern browsers (Chromium, Firefox, Safari, Edge). If something doesn’t work, try serving via a local server as described above.
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 713ba3b74d04e1075c90a65801b280c66c9aac2f
 ## License
 MIT License. You’re free to use, modify, and distribute with attribution.
